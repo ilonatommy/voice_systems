@@ -46,7 +46,14 @@ def recognize_speech_from_mic(recognizer, microphone):
         response["error"] = "Unable to recognize speech"
     return response
 
-task = 5
+#1: recognision from a file
+#2: recognision from a mic using google api
+#3: points 1 and 2 combined
+#4: listing connected devices and checking their indexes
+#5: a fun game!
+#6: the Google Maps Control project
+
+task = 6
 
 if task == 1:
     r = sr.Recognizer()
@@ -132,6 +139,53 @@ if task == 5:
         else:
             print("Sorry, you lose!\nI was thinking of '{}'.".format(word))
             break
+if task == 6:
+    #in case of changing a device - change the name of mic - use:
+    #print(sr.Microphone.list_microphone_names())
+    mic_name = "HDA Intel PCH: ALC233 Analog (hw:0,0)"
+
+    # Sample rate is how often values are recorded
+    sample_rate = 48000
+    # Chunk is like a buffer. It stores 2048 samples (bytes of data)
+    # here.
+    chunk_size = 2048
+    # Initialize the recognizer
+    r = sr.Recognizer()
+
+    # generate a list of all audio cards/microphones
+    mic_list = sr.Microphone.list_microphone_names()
+
+    # the following loop aims to set the device ID of the mic that
+    # we specifically want to use to avoid ambiguity.
+    for i, microphone_name in enumerate(mic_list):
+        if microphone_name == mic_name:
+            device_id = i
+
+    # use the microphone as source for input. Here, we also specify
+    # which device ID to specifically look for incase the microphone
+    # is not working, an error will pop up saying "device_id undefined"
+    with sr.Microphone(device_index=device_id, sample_rate=sample_rate,
+                       chunk_size=chunk_size) as source:
+        # wait for a second to let the recognizer adjust the
+        # energy threshold based on the surrounding noise level
+        r.adjust_for_ambient_noise(source)
+        print("Say Something")
+        # listens for the user's input
+        audio = r.listen(source)
+
+        try:
+            text = r.recognize_google(audio)
+            print("you said: " + text)
+
+            # error occurs when google could not understand what was said
+
+        except sr.UnknownValueError:
+            print("Google Speech Recognition could not understand audio")
+
+        except sr.RequestError as e:
+            print("Could not request results from "
+                  "Google Speech Recognition service; {0}".format(e))
+
 
 
 
