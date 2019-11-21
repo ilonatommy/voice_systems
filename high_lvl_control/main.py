@@ -156,7 +156,6 @@ def process_command(text, wd, r, m):
 def main():
     # in case of changing a device - change the name of mic - use:
     # print(sr.Microphone.list_microphone_names())
-    mic_name = "HDA Intel PCH: ALC233 Analog (hw:0,0)"
 
     # create recognizer and mic instances
     recognizer = sr.Recognizer()

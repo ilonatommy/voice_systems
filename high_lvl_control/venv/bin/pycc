@@ -1,0 +1,3 @@
+#!/media/ilona/desktop/Literatura/SemestrVII/Systemy_Glosowe/voice_sys/high_lvl_control/venv/bin/python
+from numba.pycc import main
+main()
